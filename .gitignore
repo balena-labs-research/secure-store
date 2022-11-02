@@ -1,0 +1,7 @@
+.vscode
+/secure-store
+dist
+local_dir
+/key.pem
+/cert.pem
+/encrypt.conf
