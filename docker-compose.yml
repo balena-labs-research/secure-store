@@ -1,0 +1,16 @@
+version: "2"
+
+services:
+  secure-store-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+
+  secure-store-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    devices:
+      - "/dev/fuse"
+    cap_add:
+      - SYS_ADMIN
