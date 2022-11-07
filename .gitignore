@@ -1,0 +1,7 @@
+.vscode
+.DS_Store
+/secure-store
+dist
+/key.pem
+/cert.pem
+/encrypt.conf

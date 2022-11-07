@@ -1,0 +1,7 @@
+.vscode
+.DS_Store
+dist
+.github
+.git
+/secure-store
+/source

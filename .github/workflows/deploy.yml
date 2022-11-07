@@ -1,0 +1,156 @@
+name: Deploy to BCR
+
+on:
+  push:
+    tags:
+      - "*"
+
+env:
+  BALENA_CLI_VERSION: 14.3.1
+  BALENA_FLEET: maggie0002/secure-store
+  GCR_IMAGE_NAME: maggie0002/secure-store
+  REGISTRY: ghcr.io
+
+jobs:
+  build-go:
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        job_name: ['linux', 'linux_386', 'mac_amd64', 'mac_arm64', 'windows']
+
+        include:
+          - job_name: linux
+            os: ubuntu-latest
+            go: '1.19.x'
+            filename: secure_store_linux_x86_64
+
+          - job_name: linux_386
+            os: ubuntu-latest
+            go: '1.19.x'
+            filename: secure_store_linux_386
+
+          - job_name: mac_amd64
+            os: macos-latest
+            go: '1.19.x'
+            filename: secure_store_mac_amd64
+
+          - job_name: mac_arm64
+            os: macos-latest
+            go: '1.19.x'
+            filename: secure_store_mac_arm64
+
+          - job_name: windows
+            os: windows-latest
+            go: '1.19.x'
+            filename: secure_store_windows
+
+    name: ${{ matrix.job_name }}
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go }}
+          check-latest: true
+
+      - name: Print Go version and environment
+        shell: bash
+        run: |
+          printf "Using go at: $(which go)\n"
+          printf "Go version: $(go version)\n"
+          go env
+          echo "Note: env variables passed in Makefiles override these env vars."
+
+      - name: Run tests on windows
+        shell: bash
+        run: |
+          make test
+
+      - name: Build
+        shell: bash
+        run: |
+          make dist
+          mkdir releases
+          tar -czf releases/${{ matrix.filename }}.tar.gz ./dist/*
+
+      - name: Upload file
+        uses: actions/upload-artifact@v3
+        with:
+            name: artifacts
+            path: releases/
+
+  deploy-to-bcr:
+    needs: [build-go]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Push to BCR
+        uses: balena-labs-research/community-cli-action@1.0.0
+        with:
+          balena_token: ${{secrets.BALENA_TOKEN}}
+          balena_cli_commands: >
+            push ${{ env.BALENA_FLEET }};
+          balena_cli_version: ${{ env.BALENA_CLI_VERSION }}
+
+      - name: Log release ID built
+        run: echo "Built release ID ${{ steps.build.outputs.release_id }}"
+
+  deploy-to-ghcr:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [deploy-to-bcr]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.GCR_IMAGE_NAME }}
+          flavor: |
+            latest=true
+          tags: |
+            type=semver,pattern={{version}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile.encrypt
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

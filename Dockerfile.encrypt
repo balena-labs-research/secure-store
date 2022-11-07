@@ -1,0 +1,22 @@
+FROM golang:1.19-alpine3.16 as builder
+
+ENV CGO_ENABLED=0
+
+WORKDIR /build
+
+RUN apk add make --no-cache
+
+COPY . .
+
+RUN make dist
+
+
+FROM alpine:3.16
+
+WORKDIR /app 
+
+RUN apk add fuse --no-cache
+
+COPY --from=builder /build/dist/ .
+
+ENTRYPOINT ["./secure-store"]
