@@ -8,14 +8,14 @@ import (
 	"os/exec"
 )
 
-func ExecuteArgs() error {
+func ExecuteArgs() {
 	// Execute the main process requested by the user. It is run here as this app needs to
 	// keep running to serve the encryption, and to allow both processes to remain connected to
 	// PID 1
 
 	if len(flag.Args()) == 0 {
 		fmt.Println("No arguments were passed to execute.")
-		return nil
+		return
 	}
 
 	fmt.Println("Executing the passed arguments...")
@@ -32,6 +32,4 @@ func ExecuteArgs() error {
 		// Raise non-zero exit code to ensure Docker's restart on failure policy works
 		log.Fatal(err)
 	}
-
-	return nil
 }

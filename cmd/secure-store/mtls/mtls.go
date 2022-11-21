@@ -1,6 +1,7 @@
 package mtls
 
 import (
+	"encoding/base64"
 	"fmt"
 	"log"
 	"os"
@@ -18,43 +19,62 @@ func GenerateMTLSKeys() {
 			log.Fatal(err)
 		}
 	}
-	if err := os.WriteFile(flags.KeyPath, keyPEM, 0644); err != nil {
-		if err != nil {
-			log.Fatal(err)
+
+	// If base64 flag is passed then print keys as base64 and do not write the files
+	if flags.Base64 {
+		fmt.Println("\033[34m", "MTLS_KEY:")
+		fmt.Printf("\033[0m")
+
+		fmt.Println(base64.StdEncoding.EncodeToString([]byte(keyPEM)))
+
+		fmt.Println("\033[34m", "MTLS_CERT:")
+		fmt.Printf("\033[0m")
+
+		fmt.Println(base64.StdEncoding.EncodeToString([]byte(certPEM)))
+	} else {
+		if err := os.WriteFile(flags.KeyPath, keyPEM, 0644); err != nil {
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
-	}
-	if err := os.WriteFile(flags.CertPath, certPEM, 0644); err != nil {
-		if err != nil {
-			log.Fatal(err)
+		if err := os.WriteFile(flags.CertPath, certPEM, 0644); err != nil {
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 }
 
 func ValidateMTLSKeys() {
-	// If key file doesn't exist, but environment variables do, then generate the key files
-	// from the env vars
 	_, checkCert := os.Stat(flags.CertPath)
 	_, checkKey := os.Stat(flags.KeyPath)
 
-	// TODO: Use of environment variables for storing MTLS keys is untested and subsequently
-	// undocumented.
-	encryptKey := os.Getenv("SECURE_KEY")
-	encryptCert := os.Getenv("SECURE_CERT")
+	encryptCert := os.Getenv("MTLS_CERT")
+	encryptKey := os.Getenv("MTLS_KEY")
 
-	// If not requesting new keys, and if current key files do not exist already. Files
-	// take precedent to avoid attempts to circumvent keys in event of env vars being
-	// compromised
-	if os.IsNotExist(checkCert) || os.IsNotExist(checkKey) {
-		// Check for env variables and generate keys if they exist
-		if encryptKey != "" && encryptCert != "" {
-			if err := os.WriteFile(flags.CertPath, []byte(encryptCert), 0644); err != nil {
-				log.Fatal(err)
-			}
-			if err := os.WriteFile(flags.KeyPath, []byte(encryptKey), 0644); err != nil {
-				log.Fatal(err)
-			}
-		} else {
-			log.Fatal("There are no MTLS keys or certificates available")
+	// Check if env variables exist and generate keys. Takes precedent over files existing.
+	if encryptCert != "" && encryptKey != "" {
+		// Base64 decoding of the cert
+		cert, err := base64.StdEncoding.DecodeString(encryptCert)
+		if err != nil {
+			fmt.Printf("Error decoding cert: %s ", err.Error())
+			log.Fatal(err)
 		}
+
+		// Base64 decoding of the key
+		key, err := base64.StdEncoding.DecodeString(encryptKey)
+		if err != nil {
+			fmt.Printf("Error decoding key: %s ", err.Error())
+			log.Fatal(err)
+		}
+
+		if err := os.WriteFile(flags.CertPath, []byte(cert), 0644); err != nil {
+			log.Fatal(err)
+		}
+		if err := os.WriteFile(flags.KeyPath, []byte(key), 0644); err != nil {
+			log.Fatal(err)
+		}
+	} else if os.IsNotExist(checkCert) || os.IsNotExist(checkKey) {
+		log.Fatal("There are no mTLS keys or certificates available")
 	}
 }
