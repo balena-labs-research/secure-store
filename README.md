@@ -54,8 +54,12 @@ There are many different workflows for setting up and running this project for y
 4. Generate your MTLS keys by running the command below. You will need to replace `secure-store-server` with the hostname of the device as it will be seen by the Client. For example, `secure-store.local` or `https://mystore.com`.
 
 ```
-docker run -v ${PWD}/keys:/app/keys ghcr.io/balena-labs-research/secure-store -generate-keys -certificate-path keys/cert.pem -key-path keys/key.pem -hostname secure-store-server
+docker run -v ${PWD}/keys:/app/keys ghcr.io/balena-labs-research/secure-store -generate-keys -certificate-path keys/cert.pem -key-path keys/key.pem -hostname secure-store-server -base64
 ```
+
+You will see two MTLS keys outputted to your terminal as base64 strings. Add these to your Balena Cloud account as environment variables `MTLS_CERT` and `MTLS_KEY`.
+
+If you would rather store the MTLS keys as files on the device, remove the `-base64` flag and files will be generated instead.
 
 5. Generate a key you will use for decrypting your devices. It will be printed in your terminal.
 
@@ -99,6 +103,10 @@ The `ENCRYPTED_` prefix tells Secure Store to handle these environment variables
 <img width="1188" alt="env-examples" src="https://user-images.githubusercontent.com/64841595/199483420-6dc7b50e-b8be-4503-9348-95459cee0b80.png">
 
 You are now ready to start your devices. Enjoy!
+
+## Local mode
+
+You can start the client in local mode by passing `-local your-password`. This will create the mount and not rely on the server. Your password could however, be extracted from your device if you keep the two together without additional security measures.
 
 ## Using the encrypted storage for volumes
 

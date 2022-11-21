@@ -3,6 +3,7 @@ package flags
 import "flag"
 
 var (
+	Base64         bool
 	CertPath       string
 	ConfigPath     string
 	DecryptEnvOnly bool
@@ -23,6 +24,7 @@ var (
 
 func init() {
 	// Set flags
+	flag.BoolVar(&Base64, "base64", false, "Generate base64 outputs instead of files")
 	flag.StringVar(&CertPath, "certificate-path", "./cert.pem", "Path for the MTLS certificate")
 	flag.StringVar(&EncryptString, "string", "", "String to be encrypted. This flag requires the `-key` flag")
 	flag.BoolVar(&GenerateKeys, "generate-keys", false, "Generate the two mTLS keys and save them as files")

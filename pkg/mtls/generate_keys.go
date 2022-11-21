@@ -44,11 +44,11 @@ func GenerateKeys(RSA int, days time.Duration, hostname string) ([]byte, []byte,
 
 	}
 	// Pem encoding of certificate
-	certPem := (pem.EncodeToMemory(
+	certPem := pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "CERTIFICATE",
 			Bytes: derBytes,
 		},
-	))
+	)
 	return keyPEM, certPem, nil
 }
