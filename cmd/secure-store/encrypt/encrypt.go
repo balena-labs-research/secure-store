@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"git.com/maggie0002/secure-store/pkg/encode"
-	"git.com/maggie0002/secure-store/pkg/encryption"
+	"git.com/balena-labs-research/secure-store/pkg/encode"
+	"git.com/balena-labs-research/secure-store/pkg/encryption"
 )
 
 func EncryptString(key string, text string) {

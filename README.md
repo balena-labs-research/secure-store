@@ -18,7 +18,7 @@ This repo is setup as a demo of Secure Store and can be deployed using the Deplo
 
 Instead of using two separate devices, it uses two containers merely to demonstrate the decryption process in action. A two container setup as demonstrated here would provide no security benefits as the keys are all stored on the same device, it is purely for demonstration processes. To build between devices as it is designed for, see the `Setting up your own` section below.
 
-[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/maggie0002/secure-store)
+[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/balena-labs-research/secure-store)
 
 When your containers start, you will see the Client looking for the Server container. When it finds it, it will decrypt the demo content and environment variables using the key it has fetched from the Server. You will then be able to go in to the container and see both the encrypted and decrypted content, as well as see a basic shell script in your terminal/logs that is started after decryption and is accessing the decrypted content.
 
@@ -54,13 +54,13 @@ There are many different workflows for setting up and running this project for y
 4. Generate your MTLS keys by running the command below. You will need to replace `secure-store-server` with the hostname of the device as it will be seen by the Client. For example, `secure-store.local` or `https://mystore.com`.
 
 ```
-docker run -v ${PWD}/keys:/app/keys ghcr.io/maggie0002/secure-store -generate-keys -certificate-path keys/cert.pem -key-path keys/key.pem -hostname secure-store-server
+docker run -v ${PWD}/keys:/app/keys ghcr.io/balena-labs-research/secure-store -generate-keys -certificate-path keys/cert.pem -key-path keys/key.pem -hostname secure-store-server
 ```
 
 5. Generate a key you will use for decrypting your devices. It will be printed in your terminal.
 
 ```
-docker run ghcr.io/maggie0002/secure-store -new-key
+docker run ghcr.io/balena-labs-research/secure-store -new-key
 ```
 
 6. Encrypt your files using your new key. My example key is `62bca5ca7308305035f3f3a3ee270c026474ba430f79b17128021944d548807b` and is included below, replace it with your own.
@@ -72,7 +72,7 @@ docker run \
 -v ${PWD}/source:/app/source \
 -v ${PWD}/encrypted:/app/storage \
 -v ${PWD}/keys:/app/keys \
-ghcr.io/maggie0002/secure-store \
+ghcr.io/balena-labs-research/secure-store \
 -encrypt-content ./source/. \
 -config-path ./keys/encrypt.conf \
 -key 62bca5ca7308305035f3f3a3ee270c026474ba430f79b17128021944d548807b
@@ -83,7 +83,7 @@ ghcr.io/maggie0002/secure-store \
 8. Encrypt your environment variable using the below command, where `-string` is the variable value to encrypt, and `-key` is the key we generated earlier in step 5.
 
 ```
-docker run ghcr.io/maggie0002/secure-store -key 62bca5ca7308305035f3f3a3ee270c026474ba430f79b17128021944d548807b -string this-is-my-test-api-key
+docker run ghcr.io/balena-labs-research/secure-store -key 62bca5ca7308305035f3f3a3ee270c026474ba430f79b17128021944d548807b -string this-is-my-test-api-key
 ```
 
 9. Secure Store will print an encrypted version of your passed string. We include these in our Balena Dashboard as environment variables to be decrypted later. Add them in to your dashboard in the following format:

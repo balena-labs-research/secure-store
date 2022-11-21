@@ -8,9 +8,9 @@ import (
 	"flag"
 	"fmt"
 
-	"git.com/maggie0002/secure-store/cmd/secure-store/encrypt"
-	"git.com/maggie0002/secure-store/cmd/secure-store/flags"
-	"git.com/maggie0002/secure-store/cmd/secure-store/mtls"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/encrypt"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/mtls"
 )
 
 func main() {

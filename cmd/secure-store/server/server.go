@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 
-	"git.com/maggie0002/secure-store/cmd/secure-store/flags"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
 )
 
 type Password struct {

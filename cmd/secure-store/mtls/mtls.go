@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"git.com/maggie0002/secure-store/cmd/secure-store/flags"
-	"git.com/maggie0002/secure-store/pkg/mtls"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
+	"git.com/balena-labs-research/secure-store/pkg/mtls"
 )
 
 func GenerateMTLSKeys() {
