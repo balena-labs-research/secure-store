@@ -12,6 +12,7 @@ var (
 	GenerateKeys   bool
 	GenerateNewKey bool
 	KeyPath        string
+	LocalMount     string
 	MountPoint     string
 	Port           string
 	ServerHostname string

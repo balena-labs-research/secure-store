@@ -53,6 +53,28 @@ func DecryptEnvs(password string) error {
 	return nil
 }
 
+func LocalMount(password string) {
+	fmt.Println("Attempting decrypt...")
+
+	// Decrypt any encrypted environment variables
+	err := DecryptEnvs(password)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	// Create the mount
+	if !flags.DecryptEnvOnly {
+		err = mount.CreateMount(password)
+
+		if err != nil {
+			log.Println(err)
+		}
+	}
+
+	run.ExecuteArgs()
+}
+
 func makeRequest(client *http.Client) ([]byte, error) {
 	// Request via the HTTPS client over port X
 	r, err := client.Get("https://" + flags.ServerHostname + ":" + flags.Port + "/key")
@@ -127,13 +149,7 @@ func StartClient() {
 			}
 
 			// Execute the passed Args
-			fmt.Println("Executing the passed arguments...")
-			err = run.ExecuteArgs()
-
-			if err != nil {
-				// Raise non-zero exit code to ensure Docker's restart on failure policy works
-				log.Fatal(err)
-			}
+			run.ExecuteArgs()
 
 			return
 		}
