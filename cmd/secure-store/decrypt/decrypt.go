@@ -12,10 +12,10 @@ import (
 	"strings"
 	"time"
 
-	"git.com/maggie0002/secure-store/cmd/secure-store/flags"
-	"git.com/maggie0002/secure-store/cmd/secure-store/mount"
-	"git.com/maggie0002/secure-store/cmd/secure-store/run"
-	"git.com/maggie0002/secure-store/pkg/encryption"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/mount"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/run"
+	"git.com/balena-labs-research/secure-store/pkg/encryption"
 )
 
 const (

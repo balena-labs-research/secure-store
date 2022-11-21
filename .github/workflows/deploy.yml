@@ -7,8 +7,8 @@ on:
 
 env:
   BALENA_CLI_VERSION: 14.3.1
-  BALENA_FLEET: maggie0002/secure-store
-  GCR_IMAGE_NAME: maggie0002/secure-store
+  BALENA_FLEET: balena-labs-research/secure-store
+  GCR_IMAGE_NAME: balena-labs-research/secure-store
   REGISTRY: ghcr.io
 
 jobs:

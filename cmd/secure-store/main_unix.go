@@ -8,12 +8,12 @@ import (
 	"flag"
 	"fmt"
 
-	"git.com/maggie0002/secure-store/cmd/secure-store/decrypt"
-	"git.com/maggie0002/secure-store/cmd/secure-store/encrypt"
-	"git.com/maggie0002/secure-store/cmd/secure-store/flags"
-	"git.com/maggie0002/secure-store/cmd/secure-store/mount"
-	"git.com/maggie0002/secure-store/cmd/secure-store/mtls"
-	"git.com/maggie0002/secure-store/cmd/secure-store/server"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/decrypt"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/encrypt"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/mount"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/mtls"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/server"
 )
 
 func main() {

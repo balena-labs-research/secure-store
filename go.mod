@@ -1,4 +1,4 @@
-module git.com/maggie0002/secure-store
+module git.com/balena-labs-research/secure-store
 
 go 1.19
 

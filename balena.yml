@@ -7,11 +7,11 @@ assets:
   repository:
     type: blob.asset
     data:
-      url: "https://github.com/maggie0002/secure-store"
+      url: "https://github.com/balena-labs-research/secure-store"
   logo:
     type: blob.asset
     data:
-      url: "https://github.com/maggie0002/balena-apps-logo/raw/main/logo.png"
+      url: "https://github.com/balena-labs-research/balena-apps-logo/raw/main/logo.png"
 data:
   applicationEnvironmentVariables:
     - ENCRYPTED_TESTVAR: d72afca84fb28581a2d9d533835a41cacb4beef534797825da7d8b80889593540077b2a4d9abb6db260108541903b6ce44a1a9

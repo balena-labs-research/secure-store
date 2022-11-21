@@ -7,9 +7,9 @@ import (
 	"os"
 	"os/exec"
 
-	"git.com/maggie0002/secure-store/cmd/secure-store/flags"
-	"git.com/maggie0002/secure-store/pkg/encode"
-	"git.com/maggie0002/secure-store/pkg/rclone"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
+	"git.com/balena-labs-research/secure-store/pkg/encode"
+	"git.com/balena-labs-research/secure-store/pkg/rclone"
 	"github.com/rclone/rclone/fs"
 	"github.com/rclone/rclone/fs/config"
 	"github.com/rclone/rclone/fs/config/configfile"
