@@ -3,6 +3,7 @@ package run
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 )
@@ -17,16 +18,19 @@ func ExecuteArgs() error {
 		return nil
 	}
 
+	fmt.Println("Executing the passed arguments...")
+
 	cmd := exec.Command(flag.Args()[0], flag.Args()[1:]...)
 
-	// Connect the output of the request programme to the output of this programme running as PID 1
+	// Connect the output of the requested programme to the output of this programme running as PID 1
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err := cmd.Run()
 
 	if err != nil {
-		return err
+		// Raise non-zero exit code to ensure Docker's restart on failure policy works
+		log.Fatal(err)
 	}
 
 	return nil

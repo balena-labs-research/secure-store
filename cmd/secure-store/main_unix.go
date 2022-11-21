@@ -30,6 +30,8 @@ func main() {
 		mtls.GenerateMTLSKeys()
 	case flags.GenerateNewKey:
 		encrypt.GenerateNewKey()
+	case flags.LocalMount != "":
+		decrypt.LocalMount(flags.LocalMount)
 	case flags.StartClient:
 		mtls.ValidateMTLSKeys()
 		decrypt.StartClient()
