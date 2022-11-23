@@ -22,10 +22,10 @@ func main() {
 
 	// Take action based on flag
 	switch {
-	case flags.EncryptFolder != "" && flags.UserKey != "":
-		mount.EncryptFolder(flags.UserKey, flags.EncryptFolder)
-	case flags.EncryptString != "" && flags.UserKey != "":
-		encrypt.EncryptString(flags.UserKey, flags.EncryptString)
+	case flags.EncryptFolder != "" && flags.UserPassword != "":
+		mount.EncryptFolder(flags.UserPassword, flags.EncryptFolder)
+	case flags.EncryptString != "" && flags.UserPassword != "":
+		encrypt.EncryptString(flags.UserPassword, flags.EncryptString)
 	case flags.GenerateKeys:
 		mtls.GenerateMTLSKeys()
 	case flags.GenerateNewKey:

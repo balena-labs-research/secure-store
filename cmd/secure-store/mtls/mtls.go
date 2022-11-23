@@ -15,32 +15,24 @@ func GenerateMTLSKeys() {
 
 	keyPEM, certPEM, err := mtls.GenerateKeys(4096, 3650, flags.ServerHostname)
 	if err != nil {
-		if err != nil {
-			log.Fatal(err)
-		}
+		log.Fatal(err)
 	}
 
 	// If base64 flag is passed then print keys as base64 and do not write the files
 	if flags.Base64 {
-		fmt.Println("\033[34m", "MTLS_KEY:")
-		fmt.Printf("\033[0m")
-
-		fmt.Println(base64.StdEncoding.EncodeToString([]byte(keyPEM)))
-
 		fmt.Println("\033[34m", "MTLS_CERT:")
 		fmt.Printf("\033[0m")
-
 		fmt.Println(base64.StdEncoding.EncodeToString([]byte(certPEM)))
+
+		fmt.Println("\033[34m", "MTLS_KEY:")
+		fmt.Printf("\033[0m")
+		fmt.Println(base64.StdEncoding.EncodeToString([]byte(keyPEM)))
 	} else {
 		if err := os.WriteFile(flags.KeyPath, keyPEM, 0644); err != nil {
-			if err != nil {
-				log.Fatal(err)
-			}
+			log.Fatal(err)
 		}
 		if err := os.WriteFile(flags.CertPath, certPEM, 0644); err != nil {
-			if err != nil {
-				log.Fatal(err)
-			}
+			log.Fatal(err)
 		}
 	}
 }
