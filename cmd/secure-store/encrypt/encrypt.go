@@ -3,7 +3,8 @@ package encrypt
 import (
 	"encoding/hex"
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"git.com/balena-labs-research/secure-store/pkg/encode"
 	"git.com/balena-labs-research/secure-store/pkg/encryption"
