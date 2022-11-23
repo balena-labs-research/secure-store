@@ -3,8 +3,9 @@ package mtls
 import (
 	"encoding/base64"
 	"fmt"
-	"log"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
 	"git.com/balena-labs-research/secure-store/pkg/mtls"

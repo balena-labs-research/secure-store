@@ -3,9 +3,10 @@ package run
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func ExecuteArgs() {

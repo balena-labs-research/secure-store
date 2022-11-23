@@ -3,9 +3,10 @@ package mount
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
+
+	log "github.com/sirupsen/logrus"
 
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
 	"git.com/balena-labs-research/secure-store/pkg/encode"

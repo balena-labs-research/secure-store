@@ -2,7 +2,10 @@ module git.com/balena-labs-research/secure-store
 
 go 1.19
 
-require github.com/rclone/rclone v1.59.0
+require (
+	github.com/rclone/rclone v1.59.0
+	github.com/sirupsen/logrus v1.8.1
+)
 
 require (
 	bazil.org/fuse v0.0.0-20200524192727-fb710f7dfd05 // indirect
@@ -31,7 +34,6 @@ require (
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/rfjakob/eme v1.1.2 // indirect
 	github.com/shirou/gopsutil/v3 v3.22.5 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966 // indirect
 	github.com/spf13/cobra v1.4.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

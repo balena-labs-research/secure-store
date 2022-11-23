@@ -6,11 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/mount"

@@ -5,9 +5,10 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
 )
