@@ -9,10 +9,10 @@ if [ -d "/app/storage" ] && [ -d "/app/decrypted" ]; then
     echo "You can access the client container and have a look around at the decrypted and encrypted files in" \
         "/app/decrypted and /app/storage."
 
-    echo "Here is your list of encrypted files:"
+    echo "Here is your list of encrypted files from /app/storage:"
     ls /app/storage
 
-    echo "And here is your list of decrypted files:"
+    echo "And here is a list of the same files decrypted and ready to use from /app/decrypted:"
     ls /app/decrypted
 fi
 

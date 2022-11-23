@@ -19,8 +19,8 @@ func main() {
 
 	// Take action based on flag
 	switch {
-	case flags.EncryptString != "" && flags.UserKey != "":
-		encrypt.EncryptString(flags.UserKey, flags.EncryptString)
+	case flags.EncryptString != "" && flags.UserPassword != "":
+		encrypt.EncryptString(flags.UserPassword, flags.EncryptString)
 	case flags.GenerateKeys:
 		mtls.GenerateMTLSKeys()
 	case flags.GenerateNewKey:

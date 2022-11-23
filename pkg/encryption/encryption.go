@@ -4,17 +4,17 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"io"
 )
 
-func EncryptString(stringToEncrypt string, keyString string) (string, error) {
-	// Since the key is in string, we need to convert decode it to bytes
-	key, _ := hex.DecodeString(keyString)
-	plaintext := []byte(stringToEncrypt)
+func EncryptString(stringToEncrypt string, key string) (string, error) {
+	// Use sha256 hash to ensure correct key length
+	hsha2 := sha256.Sum256([]byte(key))
 
 	// Create a new Cipher Block from the key
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher(hsha2[:])
 	if err != nil {
 		return "", err
 	}
@@ -34,16 +34,16 @@ func EncryptString(stringToEncrypt string, keyString string) (string, error) {
 	// Encrypt the data using aesGCM.Seal
 	// Since we don't want to save the nonce somewhere else in this case, we add it as a prefix
 	// to the encrypted data. The first nonce argument in Seal is the prefix.
-	ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
+	ciphertext := aesGCM.Seal(nonce, nonce, []byte(stringToEncrypt), nil)
 	return hex.EncodeToString(ciphertext), nil
 }
 
-func DecryptString(encryptedString string, keyString string) (string, error) {
-	key, _ := hex.DecodeString(keyString)
+func DecryptString(encryptedString string, key string) (string, error) {
 	enc, _ := hex.DecodeString(encryptedString)
+	hsha2 := sha256.Sum256([]byte(key))
 
 	// Create a new Cipher Block from the key
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher(hsha2[:])
 	if err != nil {
 		return "", err
 	}
