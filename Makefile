@@ -11,4 +11,4 @@ run:
 	./${BINARY_NAME}
 
 test:
-	echo "No tests"
+	go test -ldflags '-w -s'  ./...

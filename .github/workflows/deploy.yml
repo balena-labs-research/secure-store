@@ -69,7 +69,7 @@ jobs:
           go env
           echo "Note: env variables passed in Makefiles override these env vars."
 
-      - name: Run tests on windows
+      - name: Run tests
         shell: bash
         run: |
           make test

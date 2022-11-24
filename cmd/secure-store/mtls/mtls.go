@@ -11,7 +11,7 @@ import (
 	"git.com/balena-labs-research/secure-store/pkg/mtls"
 )
 
-func GenerateMTLSKeys() {
+func GenerateMTLSKeys() (string, string) {
 	fmt.Println("Generating mTLS keys...")
 
 	keyPEM, certPEM, err := mtls.GenerateKeys(4096, 3650, flags.ServerHostname)
@@ -21,29 +21,33 @@ func GenerateMTLSKeys() {
 
 	// If base64 flag is passed then print keys as base64 and do not write the files
 	if flags.Base64 {
+		certBase64 := base64.StdEncoding.EncodeToString([]byte(certPEM))
+		keyBase64 := base64.StdEncoding.EncodeToString([]byte(keyPEM))
+
 		fmt.Println("\033[34m", "MTLS_CERT:")
 		fmt.Printf("\033[0m")
-		fmt.Println(base64.StdEncoding.EncodeToString([]byte(certPEM)))
+		fmt.Println(certBase64)
 
 		fmt.Println("\033[34m", "MTLS_KEY:")
 		fmt.Printf("\033[0m")
-		fmt.Println(base64.StdEncoding.EncodeToString([]byte(keyPEM)))
-	} else {
-		if err := os.WriteFile(flags.KeyPath, keyPEM, 0644); err != nil {
-			log.Fatal(err)
-		}
-		if err := os.WriteFile(flags.CertPath, certPEM, 0644); err != nil {
-			log.Fatal(err)
-		}
+		fmt.Println(keyBase64)
+
+		return certBase64, keyBase64
 	}
+
+	if err := os.WriteFile(flags.KeyPath, keyPEM, 0644); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.WriteFile(flags.CertPath, certPEM, 0644); err != nil {
+		log.Fatal(err)
+	}
+
+	return string(certPEM), string(keyPEM)
 }
 
-func ValidateMTLSKeys() {
+func ValidateMTLSKeys(encryptCert string, encryptKey string) (string, string) {
 	_, checkCert := os.Stat(flags.CertPath)
 	_, checkKey := os.Stat(flags.KeyPath)
-
-	encryptCert := os.Getenv("MTLS_CERT")
-	encryptKey := os.Getenv("MTLS_KEY")
 
 	// Check if env variables exist and generate keys. Takes precedent over files existing.
 	if encryptCert != "" && encryptKey != "" {
@@ -67,7 +71,12 @@ func ValidateMTLSKeys() {
 		if err := os.WriteFile(flags.KeyPath, []byte(key), 0644); err != nil {
 			log.Fatal(err)
 		}
-	} else if os.IsNotExist(checkCert) || os.IsNotExist(checkKey) {
+
+		return string(cert), string(key)
+	}
+
+	if os.IsNotExist(checkCert) || os.IsNotExist(checkKey) {
 		log.Fatal("There are no mTLS keys or certificates available")
 	}
+	return "", ""
 }
