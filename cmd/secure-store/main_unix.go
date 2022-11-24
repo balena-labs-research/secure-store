@@ -7,13 +7,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	log "github.com/sirupsen/logrus"
+	"os"
 
-	"git.com/balena-labs-research/secure-store/cmd/secure-store/decrypt"
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/encrypt"
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/http"
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/mount"
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/mtls"
-	"git.com/balena-labs-research/secure-store/cmd/secure-store/server"
 )
 
 func main() {
@@ -31,13 +32,18 @@ func main() {
 	case flags.GenerateNewKey:
 		encrypt.GenerateNewKey()
 	case flags.LocalMount != "":
-		decrypt.LocalMount(flags.LocalMount)
+		mount.LocalMount(flags.LocalMount)
 	case flags.StartClient:
-		mtls.ValidateMTLSKeys()
-		decrypt.StartClient()
+		mtls.ValidateMTLSKeys(os.Getenv("MTLS_CERT"), os.Getenv("MTLS_KEY"))
+		err := http.StartClient()
+
+		if err != nil {
+			// Raise non-zero exit code to ensure Docker's restart on failure policy works
+			log.Fatal(err)
+		}
 	case flags.StartServer:
-		mtls.ValidateMTLSKeys()
-		server.StartServer()
+		mtls.ValidateMTLSKeys(os.Getenv("MTLS_CERT"), os.Getenv("MTLS_KEY"))
+		http.StartServer(os.Getenv("STORE_PASSWORD"), os.Getenv("RCLONE_CONFIG_PASS"))
 	default:
 		fmt.Println("")
 		fmt.Println("Secure Store")

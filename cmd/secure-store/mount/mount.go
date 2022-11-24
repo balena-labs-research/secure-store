@@ -2,13 +2,16 @@ package mount
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
 
 	log "github.com/sirupsen/logrus"
 
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/decrypt"
 	"git.com/balena-labs-research/secure-store/cmd/secure-store/flags"
+	"git.com/balena-labs-research/secure-store/cmd/secure-store/run"
 	"git.com/balena-labs-research/secure-store/pkg/encode"
 	"git.com/balena-labs-research/secure-store/pkg/rclone"
 	"github.com/rclone/rclone/fs"
@@ -138,6 +141,30 @@ func EncryptFolder(key string, sourceFolder string) {
 
 	if err != nil {
 		log.Printf("Error copying encrypted files: %v", err)
+	}
+}
+
+func LocalMount(password string) {
+	fmt.Println("Attempting decrypt...")
+
+	// Decrypt any encrypted environment variables
+	decrypt.DecryptEnvs(os.Environ(), password)
+
+	// Create the mount
+	if !flags.DecryptEnvOnly {
+		err := CreateMount(password)
+
+		if err != nil {
+			log.Println(err)
+		}
+	}
+
+	// Execute the passed Args
+	err := run.ExecuteArgs(flag.Args())
+
+	if err != nil {
+		// Raise non-zero exit code to ensure Docker's restart on failure policy works
+		log.Fatal(err)
 	}
 }
 
