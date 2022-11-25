@@ -1,6 +1,6 @@
 name: Secure Store
 description: >-
-  This is an experimental project for encrypting content on Balena IoT devices (such as the Raspberry Pi) to avoid your content being accessed when devices are lost or stolen. Content can include both folders/files and environment variables, such as encrypted API keys stored in your Balena Cloud.
+  This is an experimental project for encrypting content on Balena IoT devices (such as the Raspberry Pi) to avoid your content being accessed when devices are lost or stolen. Content can include both folders/files and environment variables, such as encrypted API keys stored in the Balena Cloud.
 joinable: false
 type: sw.application
 assets:

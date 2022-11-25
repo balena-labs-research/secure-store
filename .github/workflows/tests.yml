@@ -47,6 +47,7 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
           check-latest: true
+          cache: true
 
       - name: Print Go version and environment
         shell: bash
@@ -56,7 +57,16 @@ jobs:
           go env
           echo "Note: env variables passed in Makefiles override these env vars."
 
-      - name: Run tests
+      - name: Run Ubuntu tests
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install fuse -y
+          sudo make test
+
+      - name: Run non-Ubuntu tests
+        if: matrix.os != 'ubuntu-latest'
         shell: bash
         run: |
           make test

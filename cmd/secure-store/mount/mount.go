@@ -103,7 +103,7 @@ func CreateMount(passwd string) error {
 		unMount(mountPoint)
 	}
 
-	// Parameters for the rclone mount
+	// Parameters for the Rclone mount
 	mountParams := rc.Params{
 		"fs":         "encrypted_storage:",
 		"mountPoint": mountPoint,
