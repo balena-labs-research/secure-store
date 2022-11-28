@@ -9,6 +9,7 @@ The difficultly with implementing this functionality on devices like the Raspber
 1. Run your Secure Store Clients on your network. Plug your Secure Store Server in to the same network which will allow your Clients to access the key and decrypt the content store on them. Then remove the Secure Store Server from the network again. In this scenario, as soon as power is removed from the Client device there is only encrypted content available to the person who took your device, and no access to the Secure Server to decrypt it again.
 2. Run the Store Client and Store Servers on the same network, ensuring your network is secured either by protecting the Ethernet accessability or secure WiFi passwords. A compromised device when taken off your network will no longer be able to access the Store Server and get the key required to decrypt the data. For a user to decrypt the data, they would need to extract the WiFi password from the device and the mTLS keys used to communicate with the server, go back to your network, connect to your network and then request the decryption key from your server using the extracted keys, significantly reducing the likelihood of a compromise.
 3. Run your Store Server on a remote server online and apply an IP blocklist/whitelist to the host. Your online server will only accept requests from certain IP addresses (for example the IP address of your public network), which means devices will only decrypt data if they are requesting the key from inside your own network.
+4. Encrypt the content [locally](#local-mode), and use something distinct about the operating environment as your password. For example, you could use a hash of your WiFi configuration to only decrypt when connected to the internet, or a hash of a certain part of a file unique to the OS. By compiling the requirements for the hash into the binary, it mitigates hackers attempts to access your content.
 
 If you identify other use cases please do let us know so we can explore further iterations.
 
@@ -100,7 +101,7 @@ You are now ready to start your devices. Enjoy!
 
 ## Local mode
 
-You can start the client in local mode by passing `-local your-password`. This will create the mount and not rely on the server. Your password could however, be extracted from your device if you keep the two together without additional security measures.
+You can start the client in local mode by passing `-local your-password`. This will create the mount and not rely on the server. Your password could however, be extracted from your device if you keep the two together without additional security measures. You should consider compiling the password used, or the means of generating the password into the Golang binary. 
 
 ## Using the encrypted storage for volumes
 
