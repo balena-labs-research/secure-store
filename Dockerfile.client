@@ -21,9 +21,9 @@ COPY --from=builder /build/dist/ .
 
 # This is for demonstration purposes only. NEVER include your keys in your GitHub repo,
 # use GitHub secrets instead.
-COPY keys .
+COPY keys/encrypt_example.conf encrypt.conf
 
-COPY encrypted storage
+COPY encrypted_example storage
 
 COPY start.sh .
 
